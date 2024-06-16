@@ -5,6 +5,7 @@ const signup = require("./routes/sign-up.js");
 const login = require("./routes/log-in.js");
 const logout = require("./routes/log-out.js");
 const confessions = require("./routes/confessions.js");
+const { getSession } = require("./model/session.js");
 
 const body = express.urlencoded({ extended: false });
 const cookies = cookieParser(process.env.COOKIE_SECRET);
@@ -17,6 +18,7 @@ server.use((req, res, next) => {
   next();
 });
 server.use(cookies);
+server.use(readCookie);
 server.get("/", home.get);
 server.get("/sign-up", signup.get);
 server.post("/sign-up", body, signup.post);
@@ -27,3 +29,12 @@ server.get("/confessions/:user_id", confessions.get);
 server.post("/confessions/:user_id", body, confessions.post);
 
 module.exports = server;
+
+function readCookie(req, res, next) {
+  const sid = req.signedCookies.sid;
+  const sessionCurrent = getSession(sid);
+  if (sessionCurrent) {
+    req.session = sessionCurrent;
+  }
+  next();
+}

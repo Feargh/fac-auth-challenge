@@ -1,13 +1,15 @@
 const { Layout } = require("../templates.js");
+const { getSession } = require("../model/session.js");
 
 function get(req, res) {
-  /**
-   * [1] Read session ID from cookie
-   * [2] Get session from DB
-   * [3] If the session exists render a log out form
-   * [4] This should submit a request to `POST /log-out`
-   * [5] Else render the sign up/log in links
-   */
+  // [1] Read session ID from cookie
+  // [2] Get session from DB
+  const sid = req.signedCookies.sid;
+  const sessionCurrent = getSession(sid);
+  // [3] If the session exists render a log out form
+  // [4] This should submit a request to `POST /log-out`
+  // [5] Else render the sign up/log in links
+
   const title = "Confess your secrets!";
   const content = /*html*/ `
     <div class="Cover">
